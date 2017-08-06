@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">HelloDagger</string>
+    <string name="refresh">Refresh</string>
+    <string name="unknown">Unknown</string>
+    <string name="clear_memory_cache">Clear memory cache</string>
+    <string name="clear_memory_and_disk_cache">Clear memory and disk cache</string>
+    <string name="info">Note:\n\nThe cached data will expire after 5 seconds.\n\nIf you clear the memory cache and the disk cache is still valid, then the disk cache will be used. Disk reads are fast so you might not see any difference.\n\nIf the cached data doesn\'t exist or is expired, a fake call will be made to retrieve a random number between 1 and 50.</string>
+</resources>
