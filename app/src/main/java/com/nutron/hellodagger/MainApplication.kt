@@ -1,24 +1,22 @@
 package com.nutron.hellodagger
 
 import android.app.Application
-import android.content.Context
-import android.support.v4.app.Fragment
 import com.nutron.hellodagger.data.preference.Preferences
-import com.nutron.hellodagger.di.AppComponent
-import com.nutron.hellodagger.di.AppModule
-import com.nutron.hellodagger.di.DaggerAppComponent
+import com.nutron.hellodagger.di.*
 
 
 class MainApplication : Application() {
 
     companion object {
-        lateinit var appComponent: AppComponent
+        lateinit var _appComponent: AppComponent
+        var _viewComponent: ViewComponent? = null
+        var _domainComponent: DomainComponent? = null
     }
 
     override fun onCreate() {
         super.onCreate()
         Preferences.init(this)
-        appComponent = initDagger(this)
+        _appComponent = initDagger(this)
     }
 
     @Suppress("DEPRECATION")
@@ -26,9 +24,3 @@ class MainApplication : Application() {
         return DaggerAppComponent.builder().appModule(AppModule(application)).build()
     }
 }
-
-val Context.component: AppComponent
-    get() = MainApplication.appComponent
-
-val Fragment.component: AppComponent
-    get() = MainApplication.appComponent

@@ -18,7 +18,7 @@ interface RandomViewModel {
     val output: Output
 
     interface Input {
-        val active: PublishRelay<Unit>
+        val active: Consumer<Unit>
         val refresh: Consumer<Unit>
         val clearMemory: Consumer<Unit>
         val ClearMemoryAndDisk: Consumer<Unit>
@@ -55,23 +55,22 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
     override val enableButton: Observable<Boolean>
 
     init {
-
+        // prepare input trigger
         val inputTrigger = Observable.merge(active, refresh)
                 .debounce(300, TimeUnit.MICROSECONDS)
                 .share()
+
+        // prepare data source
         val shareObservable = inputTrigger.observeOn(Schedulers.io())
                 .flatMap { numberInteractor.buildObservable().materialize()}
                 .share()
 
+        // prepare progress dialog trigger
         val startActiveProgress = inputTrigger.map { true }
         val stopActiveProgress = shareObservable.map { false }
         val processingObservable = Observable.merge(startActiveProgress, stopActiveProgress).share()
-        showProgress = processingObservable
-        enableButton = processingObservable.map { !it }
 
-        error = shareObservable.error()
-        number = shareObservable.elements()
-
+        // prepare clear memory button put put
         val clearMemObservable = clearMemory.observeOn(Schedulers.computation())
                 .flatMap {
                     /** we need to do 'materialize' because 'clearMemoryCache' return 'Completable',
@@ -80,8 +79,12 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
                     numberInteractor.clearMemoryCache()
                             .toObservable<String>()
                             .materialize()
-                }.map { "clear memory success" }
+                }.share()
 
+        val clearMemError = clearMemObservable.error()
+        val clearMemSuccess = clearMemObservable.elements().map { "clear memory success" }
+
+        // prepare clear memory & Disk button put put
         val clearMemDiskObservable = ClearMemoryAndDisk.observeOn(Schedulers.computation())
                 .flatMap {
                     /** we need to do 'materialize' because 'clearMemoryAndDiskCache'
@@ -90,8 +93,17 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
                     numberInteractor.clearMemoryAndDiskCache()
                             .toObservable<String>()
                             .materialize()
-                }.map {  "clear Memory and Disk" }
+                }.share()
 
-        showToast = Observable.merge(clearMemObservable, clearMemDiskObservable)
+        val clearMemDiskError = clearMemDiskObservable.error()
+        val clearMemDiskSuccess = clearMemDiskObservable.elements().map {  "clear Memory and Disk" }
+
+
+        // apply output
+        showProgress = processingObservable
+        enableButton = processingObservable.map { !it }
+        number = shareObservable.elements()
+        showToast = Observable.merge(clearMemSuccess, clearMemDiskSuccess)
+        error = Observable.merge(listOf(shareObservable.error(), clearMemError, clearMemDiskError))
     }
 }
