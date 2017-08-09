@@ -12,23 +12,23 @@ interface AppComponent {
     // injection targets here
 
     // factory method to instantiate the subcomponent defined here (passing in the module instance)
-    fun plusDomainComponent(domainModule: DomainModule): DomainComponent
+    fun plusDomainSubComponent(domainModule: DomainModule): DomainSubComponent
 }
 
 
 @DomainScope
 @Subcomponent(modules = arrayOf(DomainModule::class))
-interface DomainComponent {
+interface DomainSubComponent {
     // injection targets here
 
     // factory method to instantiate the subcomponent defined here (passing in the module instance)
-    fun plusViewComponent(viewModelModule: ViewModelModule): ViewComponent
+    fun plusViewSubComponent(viewModelModule: ViewModelModule): ViewSubComponent
 
 }
 
 @ViewScope
 @Subcomponent(modules = arrayOf(ViewModelModule::class))
-interface ViewComponent {
+interface ViewSubComponent {
     // injection targets here
     fun inject(fragment: RandomFragment)
 

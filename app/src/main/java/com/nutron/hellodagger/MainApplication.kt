@@ -9,8 +9,8 @@ class MainApplication : Application() {
 
     companion object {
         lateinit var _appComponent: AppComponent
-        var _viewComponent: ViewComponent? = null
-        var _domainComponent: DomainComponent? = null
+        var _viewComponent: ViewSubComponent? = null
+        var _domainComponent: DomainSubComponent? = null
     }
 
     override fun onCreate() {

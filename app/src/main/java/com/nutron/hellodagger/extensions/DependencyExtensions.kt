@@ -18,15 +18,15 @@ val Fragment.component: AppComponent
 /**
  * extension function for 'DomainComponent'
  */
-val Context.domainComponent: DomainComponent
+val Context.domainComponent: DomainSubComponent
     get() = createDomainComponent()
 
-val Fragment.domainComponent: DomainComponent
+val Fragment.domainComponent: DomainSubComponent
     get() = context.createDomainComponent()
 
-fun Context.createDomainComponent(): DomainComponent {
+fun Context.createDomainComponent(): DomainSubComponent {
     MainApplication._domainComponent =  MainApplication._domainComponent ?:
-            MainApplication._appComponent.plusDomainComponent(DomainModule())
+            MainApplication._appComponent.plusDomainSubComponent(DomainModule())
     return MainApplication._domainComponent!!
 }
 
@@ -37,17 +37,17 @@ fun Context.clearDomainComponent() {
 /**
  * extension function for 'ViewComponent'
  */
-val Context.viewComponent: ViewComponent
+val Context.viewComponent: ViewSubComponent
     get() = createViewComponent()
 
-val Fragment.viewComponent: ViewComponent
+val Fragment.viewComponent: ViewSubComponent
     get() = context.createViewComponent()
 
-fun Context.createViewComponent(): ViewComponent {
+fun Context.createViewComponent(): ViewSubComponent {
     MainApplication._viewComponent =  MainApplication._viewComponent ?:
             MainApplication._appComponent
-                    .plusDomainComponent(DomainModule())
-                    .plusViewComponent(ViewModelModule())
+                    .plusDomainSubComponent(DomainModule())
+                    .plusViewSubComponent(ViewModelModule())
     return MainApplication._viewComponent!!
 }
 
