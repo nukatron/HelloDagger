@@ -56,11 +56,9 @@ class DataModule {
 class DomainModule {
 
     @Provides
-    @DomainScope //optional
     fun provideClockManager(): ClockManager = ClockManagerImpl()
 
     @Provides
-    @DomainScope //optional
     fun provideSchedulerProvider(): SchedulerProvider = SchedulerProviderImpl()
 
 }
@@ -72,6 +70,5 @@ class DomainModule {
 class ViewModelModule {
 
     @Provides
-    @ViewScope //optional
     fun provideRandomViewModel(numberInteractor: GetNumberInteractor): RandomViewModel = RandomViewModelImpl(numberInteractor)
 }

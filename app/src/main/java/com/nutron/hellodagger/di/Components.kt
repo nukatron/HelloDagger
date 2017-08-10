@@ -3,16 +3,19 @@ package com.nutron.hellodagger.di
 import com.nutron.hellodagger.presentations.random.RandomFragment
 import dagger.Component
 import dagger.Subcomponent
+import javax.inject.Provider
 import javax.inject.Singleton
 
 
-@Singleton
-@Component(modules = arrayOf(AppModule::class, DataModule::class))
-interface AppComponent {
-    // injection targets here
+interface SubComponentBuilder<out V> {
+    fun build(): V
+}
 
-    // factory method to instantiate the subcomponent defined here (passing in the module instance)
-    fun plusDomainSubComponent(domainModule: DomainModule): DomainSubComponent
+@Singleton
+@Component(modules = arrayOf(AppModule::class, DataModule::class, ApplicationBinderModule::class))
+interface AppComponent {
+    // Returns a map with all the builders mapped by their class.
+    fun subComponentBuilders(): Map<Class<*>, Provider<SubComponentBuilder<*>>>
 }
 
 
@@ -21,16 +24,21 @@ interface AppComponent {
 interface DomainSubComponent {
     // injection targets here
 
-    // factory method to instantiate the subcomponent defined here (passing in the module instance)
-    fun plusViewSubComponent(viewModelModule: ViewModelModule): ViewSubComponent
-
+    @Subcomponent.Builder
+    interface Builder : SubComponentBuilder<DomainSubComponent> {
+        fun domainModule(module: DomainModule): Builder
+    }
 }
 
 @ViewScope
-@Subcomponent(modules = arrayOf(ViewModelModule::class))
+@Subcomponent(modules = arrayOf(ViewModelModule::class, DomainModule::class))
 interface ViewSubComponent {
     // injection targets here
     fun inject(fragment: RandomFragment)
 
-    // factory method to instantiate the subcomponent defined here (passing in the module instance)
+    @Subcomponent.Builder
+    interface Builder : SubComponentBuilder<ViewSubComponent> {
+        fun viewModule(module: ViewModelModule): Builder
+        fun domainModule(module: DomainModule): Builder
+    }
 }
