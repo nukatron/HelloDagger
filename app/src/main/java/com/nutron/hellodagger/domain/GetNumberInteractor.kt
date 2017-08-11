@@ -4,12 +4,13 @@ import com.nutron.hellodagger.common.DI_NAME_VALUE_LOCAL_DATA_SOURCE
 import com.nutron.hellodagger.common.DI_NAME_VALUE_REMOTE_DATA_SOURCE
 import com.nutron.hellodagger.data.ValueDataSource
 import com.nutron.hellodagger.data.entity.ValueEntity
+import com.nutron.hellodagger.di.ViewScope
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Named
 
-
+@ViewScope
 class GetNumberInteractor @Inject constructor(
         private val schedulerProvider: SchedulerProvider,
         private @Named(DI_NAME_VALUE_LOCAL_DATA_SOURCE) val localDataSource: ValueDataSource,

@@ -25,15 +25,11 @@ class MainApplication : Application() {
     }
 
     private fun initViewComponent(): ViewSubComponent {
-        val builder = appComponent
-                .subComponentBuilders()[ViewSubComponent.Builder::class.java]?.get()
+        val builder = appComponent.subComponentBuilders()[ViewSubComponent.Builder::class.java]?.get()
                 as? ViewSubComponent.Builder
-        // it should be crash if the object doesn't has
-        return builder
+        return builder // it should be crash if the object doesn't has
                 ?.domainModule(DomainModule()) // you can ignore this line because the module doesn't take param
                 ?.viewModule(ViewModelModule()) // you can ignore this line because the module doesn't take param
                 ?.build()!!
-
-
     }
 }

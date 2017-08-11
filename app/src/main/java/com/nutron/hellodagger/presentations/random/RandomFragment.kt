@@ -1,5 +1,6 @@
 package com.nutron.hellodagger.presentations.random
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import com.nutron.hellodagger.MainApplication
 import com.nutron.hellodagger.R
 import com.nutron.hellodagger.domain.GetNumberInteractor
 import com.nutron.hellodagger.extensions.addTo
+import com.nutron.hellodagger.extensions.logd
 import com.nutron.hellodagger.extensions.loge
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -32,14 +34,21 @@ class RandomFragment: Fragment() {
         }
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //inject Dagger
         MainApplication.viewComponent.inject(this)
 
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        logd("RandomFragment # Interactor $numberInteractor")
         return inflater?.inflate(R.layout.fragment_random, container, false)
     }
 
