@@ -18,7 +18,7 @@ class LandingFragment : Fragment() {
         fun gotoPageTwo()
     }
 
-    private var listtener: Callback? = null
+    private var listener: Callback? = null
 
     companion object {
         fun getInstance(): LandingFragment {
@@ -28,12 +28,7 @@ class LandingFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        listtener = context as? Callback
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+        listener = context as? Callback
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,11 +38,11 @@ class LandingFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         RxView.clicks(pageOneBtn).subscribe {
-            listtener?.gotoPageOne()
+            listener?.gotoPageOne()
         }
 
         RxView.clicks(pageTwoBtn).subscribe {
-            listtener?.gotoPageTwo()
+            listener?.gotoPageTwo()
         }
     }
 }

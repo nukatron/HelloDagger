@@ -9,6 +9,9 @@
     <string name="shortcut_main_short_label">Main page</string>
     <string name="shortcut_main_long_label">Main page</string>
     <string name="shortcut_main_disable">Sorry this shortcut is no longer available</string>
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_empty_fragment">Welcome to\nEmpty Fragment!</string>
+
+    <string name="btn_goto_random">Go to RandomFragment</string>
+    <string name="btn_goto_empty">Go to EmptyFragment</string>
 
 </resources>

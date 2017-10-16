@@ -14,6 +14,7 @@ import com.nutron.hellodagger.domain.GetNumberInteractor
 import com.nutron.hellodagger.extensions.addTo
 import com.nutron.hellodagger.extensions.logd
 import com.nutron.hellodagger.extensions.loge
+import com.nutron.hellodagger.extensions.viewComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_random.*
@@ -41,9 +42,8 @@ class RandomFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //inject Dagger
-        MainApplication.viewComponent.inject(this)
-
-
+        logd("RandomFragment # viewComponent $viewComponent")
+        viewComponent.inject(this)
 
     }
 

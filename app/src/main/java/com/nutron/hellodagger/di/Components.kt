@@ -1,7 +1,7 @@
 package com.nutron.hellodagger.di
 
+import com.nutron.hellodagger.presentations.empty.EmptyFragment
 import com.nutron.hellodagger.presentations.random.RandomFragment
-import com.nutron.hellodagger.presentations.second.SecondFragment
 import dagger.Component
 import dagger.Subcomponent
 import javax.inject.Provider
@@ -36,7 +36,7 @@ interface DomainSubComponent {
 interface ViewSubComponent {
     // injection targets here
     fun inject(fragment: RandomFragment)
-    fun inject(fragment: SecondFragment)
+    fun inject(fragment: EmptyFragment)
 
     @Subcomponent.Builder
     interface Builder : SubComponentBuilder<ViewSubComponent> {

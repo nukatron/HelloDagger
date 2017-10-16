@@ -2,19 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:gravity="center">
 
     <Button
         android:id="@+id/pageOneBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Page1" />
+        android:text="@string/btn_goto_random"
+        android:textAllCaps="false"/>
 
     <Button
         android:id="@+id/pageTwoBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Page2" />
+        android:text="@string/btn_goto_empty"
+        android:textAllCaps="false"/>
 
 </LinearLayout>

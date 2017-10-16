@@ -10,21 +10,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".presentations.SplashActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+
+        <activity android:name=".presentations.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
-
         </activity>
-        <activity android:name=".presentations.MainActivity" />
     </application>
 
 </manifest>
