@@ -32,9 +32,9 @@ class EmptyFragment : Fragment() {
         viewComponent.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // verify the GetNumberInteractor memory object ID
         logd("SecondFragment # Interactor $interactor")
-        return inflater?.inflate(R.layout.fragment_empty, container, false)
+        return inflater.inflate(R.layout.fragment_empty, container, false)
     }
 }

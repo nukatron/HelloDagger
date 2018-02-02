@@ -13,8 +13,8 @@ import javax.inject.Named
 @ViewScope
 class GetNumberInteractor @Inject constructor(
         private val schedulerProvider: SchedulerProvider,
-        private @Named(DI_NAME_VALUE_LOCAL_DATA_SOURCE) val localDataSource: ValueDataSource,
-        private @Named(DI_NAME_VALUE_REMOTE_DATA_SOURCE) val remoteDataSource: ValueDataSource,
+        @Named(DI_NAME_VALUE_LOCAL_DATA_SOURCE) private val localDataSource: ValueDataSource,
+        @Named(DI_NAME_VALUE_REMOTE_DATA_SOURCE) private val remoteDataSource: ValueDataSource,
         private val clockManager: ClockManager) : ObservableUseCase<ValueEntity> {
 
     private val STALE_MS = (5 * 1000).toLong()

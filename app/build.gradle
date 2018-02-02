@@ -36,6 +36,8 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportLibVersion"
     compile "com.android.support:recyclerview-v7:$supportLibVersion"
     compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    compile "com.android.support:design:$supportLibVersion"
+    compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 
     //Rx stuff
     compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
@@ -54,14 +56,44 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // test
-    testCompile "junit:junit:$junitVersion"
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-all:$mockitoVersion"
+    testImplementation "com.nhaarman:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
 
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:26.+'
+    // Espresso UI Testing dependencies.
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+
 }
+
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibVersion"
+    resolutionStrategy.force "com.android.support:support-v4:$rootProject.ext.supportLibVersion"
+    resolutionStrategy.force "com.android.support:design:$rootProject.ext.supportLibVersion"
+    resolutionStrategy.force "com.android.support:recyclerview-v7:$rootProject.ext.supportLibVersion"
+    resolutionStrategy.force "com.android.support:design:$rootProject.ext.supportLibVersion"
+    resolutionStrategy.force("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
+}
+
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    }
+}
+
 repositories {
     mavenCentral()
 }

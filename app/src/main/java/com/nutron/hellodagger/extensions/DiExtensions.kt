@@ -25,7 +25,7 @@ val Activity.component: AppComponent
     get() = MainApplication.appComponent
 
 val Fragment.viewComponent: ViewSubComponent
-    get() = (activity.application as MainApplication).viewComponent!!
+    get() = (activity?.application as MainApplication).viewComponent!!
 
 val Activity.viewComponent: ViewSubComponent
     get() = (application as MainApplication).viewComponent!!
@@ -35,5 +35,5 @@ inline fun <reified T: Activity> T.clearViewComponent() {
 }
 
 inline fun <reified T: Fragment> T.clearViewComponent() {
-    (activity.application as MainApplication).clearViewComponent()
+    (activity?.application as MainApplication).clearViewComponent()
 }

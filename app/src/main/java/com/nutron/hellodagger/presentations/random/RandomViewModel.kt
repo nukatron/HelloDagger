@@ -1,9 +1,11 @@
 package com.nutron.hellodagger.presentations.random
 
+import android.util.Log
 import com.jakewharton.rxrelay2.PublishRelay
 import com.nutron.hellodagger.common.ParentRefDelegate
 import com.nutron.hellodagger.data.entity.ValueEntity
 import com.nutron.hellodagger.domain.GetNumberInteractor
+import com.nutron.hellodagger.extensions.completed
 import com.nutron.hellodagger.extensions.elements
 import com.nutron.hellodagger.extensions.error
 import io.reactivex.Observable
@@ -21,7 +23,7 @@ interface RandomViewModel {
         val active: Consumer<Unit>
         val refresh: Consumer<Unit>
         val clearMemory: Consumer<Unit>
-        val ClearMemoryAndDisk: Consumer<Unit>
+        val clearMemoryAndDisk: Consumer<Unit>
     }
 
     interface Output {
@@ -34,7 +36,7 @@ interface RandomViewModel {
 
 }
 
-class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
+class RandomViewModelImpl(private val numberInteractor: GetNumberInteractor) :
         RandomViewModel, RandomViewModel.Input, RandomViewModel.Output {
 
 
@@ -45,7 +47,7 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
     override val active: PublishRelay<Unit> = PublishRelay.create()
     override val refresh: PublishRelay<Unit> = PublishRelay.create()
     override val clearMemory: PublishRelay<Unit> = PublishRelay.create()
-    override val ClearMemoryAndDisk: PublishRelay<Unit> = PublishRelay.create()
+    override val clearMemoryAndDisk: PublishRelay<Unit> = PublishRelay.create()
 
     // output
     override val showProgress: Observable<Boolean>
@@ -57,7 +59,7 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
     init {
         // prepare input trigger
         val inputTrigger = Observable.merge(active, refresh)
-                .debounce(300, TimeUnit.MICROSECONDS)
+                .debounce(300, TimeUnit.MILLISECONDS)
                 .share()
 
         // prepare data source
@@ -68,13 +70,14 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
         // prepare progress dialog trigger
         val startActiveProgress = inputTrigger.map { true }
         val stopActiveProgress = shareObservable.map { false }
-        val processingObservable = Observable.merge(startActiveProgress, stopActiveProgress).share()
+        val processingObservable = Observable.merge(startActiveProgress, stopActiveProgress)
+                .distinctUntilChanged().share()
 
         // prepare clear memory button put put
         val clearMemObservable = clearMemory.observeOn(Schedulers.computation())
                 .flatMap {
                     /** we need to do 'materialize' because 'clearMemoryCache' return 'Completable',
-                     * so it will never trigger ourout put because
+                     * so it will never trigger our output because
                      * our output always need 'element' (onNext), NOT 'onCompleted'*/
                     numberInteractor.clearMemoryCache()
                             .toObservable<String>()
@@ -82,10 +85,10 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
                 }.share()
 
         val clearMemError = clearMemObservable.error()
-        val clearMemSuccess = clearMemObservable.elements().map { "clear memory success" }
+        val clearMemSuccess = clearMemObservable.completed().map { "clear memory success" }
 
         // prepare clear memory & Disk button put put
-        val clearMemDiskObservable = ClearMemoryAndDisk.observeOn(Schedulers.computation())
+        val clearMemDiskObservable = clearMemoryAndDisk.observeOn(Schedulers.computation())
                 .flatMap {
                     /** we need to do 'materialize' because 'clearMemoryAndDiskCache'
                      * return 'Completable', so it will never trigger our output
@@ -96,7 +99,7 @@ class RandomViewModelImpl(val numberInteractor: GetNumberInteractor) :
                 }.share()
 
         val clearMemDiskError = clearMemDiskObservable.error()
-        val clearMemDiskSuccess = clearMemDiskObservable.elements().map {  "clear Memory and Disk" }
+        val clearMemDiskSuccess = clearMemDiskObservable.completed().map {  "clear Memory and Disk" }
 
 
         // apply output

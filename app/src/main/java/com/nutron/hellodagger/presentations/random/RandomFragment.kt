@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
-import com.nutron.hellodagger.MainApplication
 import com.nutron.hellodagger.R
 import com.nutron.hellodagger.domain.GetNumberInteractor
 import com.nutron.hellodagger.extensions.addTo
@@ -47,12 +46,12 @@ class RandomFragment: Fragment() {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         logd("RandomFragment # Interactor $numberInteractor")
-        return inflater?.inflate(R.layout.fragment_random, container, false)
+        return inflater.inflate(R.layout.fragment_random, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initOutput()
         initInput()
@@ -76,7 +75,7 @@ class RandomFragment: Fragment() {
 
         RxView.clicks(randomClearMemoryAndDiskCacheBtn)
                 .map { Unit }
-                .subscribe(viewModel.input.ClearMemoryAndDisk)
+                .subscribe(viewModel.input.clearMemoryAndDisk)
                 .addTo(disposeBag)
 
         viewModel.input.active.accept(Unit)
